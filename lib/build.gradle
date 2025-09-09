@@ -8,11 +8,13 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'com.adarshr.test-logger' version '4.0.0'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group 'nl.bvkatwijk.awscdkfnhelper'
 description 'default project description'
-version '0.1.0'
+version '0.1.0-SNAPSHOT'
 
 configurations {
     testCompile.extendsFrom compileOnly
@@ -71,5 +73,67 @@ clean { delete += "tmp" }
 tasks.withType(Zip) { task ->
     task.doLast {
         ant.checksum file: it.archivePath
+    }
+}
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+signing {
+    sign publishing.publications
+}
+
+tasks.withType(Sign) {
+    onlyIf { isReleaseVersion }
+}
+
+publishing {
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId = 'nl.bvkatwijk'
+            artifactId = 'aws-cdk-fn-helper'
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+
+            pom {
+                name = 'aws-cdk-fn-helper'
+                description = 'Test Fn functions locally'
+                url = 'https://github.com/bvkatwijk/aws-cdk-fn-helper/'
+                developers {
+                    developer {
+                        id = 'bvkatwijk'
+                        name = 'Boris van Katwijk'
+                        email = 'bvkatwijk@gmail.com'
+                        organizationUrl = 'https://bvankatwijk.nl/'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/bvkatwijk/aws-cdk-fn-helper.git'
+                    developerConnection = 'scm:git:ssh://github.com/bvkatwijk/aws-cdk-fn-helper.git'
+                    url = 'https://github.com/bvkatwijk/aws-cdk-fn-helper/'
+                }
+
+                license {
+                    name = "MIT Licence"
+                    url = "http://www.opensource.org/licenses/mit-license.php"
+                }
+
+            }
+        }
     }
 }
