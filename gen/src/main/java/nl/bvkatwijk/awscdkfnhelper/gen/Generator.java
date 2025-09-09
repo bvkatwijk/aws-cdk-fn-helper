@@ -32,11 +32,6 @@ public record Generator() {
         writer.write(List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
-            "import software.amazon.awscdk.Fn;\n",
-            "import software.amazon.awscdk.$Module;\n",
-            "import software.amazon.awscdk.ICfnConditionExpression;\n",
-            "import software.amazon.awscdk.ICfnRuleConditionExpression;\n",
-            "import software.amazon.awscdk.IResolvable;\n",
             "public class FnDelegate {",
             methods.flatMap(Method::delegation).map(Generator::indent).mkString("\n"),
             "}"
@@ -148,7 +143,7 @@ public record Generator() {
         public List<String> delegation() {
             return List.of(
                 "public " + returnType + " " + name + "(" + paramDeclarations(parameters) + ") {",
-                indent("return Fn." + name + "(" + paramArgs(parameters) + ");"),
+                indent("return software.amazon.awscdk.Fn." + name + "(" + paramArgs(parameters) + ");"),
                 "}"
             );
         }
