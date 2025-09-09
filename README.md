@@ -3,9 +3,48 @@
 [![CI](https://github.com/bvkatwijk/aws-cdk-fn-helper/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/bvkatwijk/aws-cdk-fn-helper/actions/)
 [![codecov](https://codecov.io/gh/bvkatwijk/aws-cdk-fn-helper/branch/master/graph/badge.svg)](https://codecov.io/gh/bvkatwijk/aws-cdk-fn-helper)
 
+Test `Fn` functions locally
+
+## About
+
+## Usage
+
+Instead of calling `Fn` statically, inject an instance of 
+`FnDelegate` (using `IFn` interface)
+
+Before:
+```java
+public record YourClass() {
+    public String extractLoadBalancerName(String loadBalancerDns) {
+        return Fn.select(0, Fn.split(".elb.", loadBalancerDns));
+    }
+}
+```
+
+After:
+```java
+public record YourClass(IFn fn) {
+    public String extractLoadBalancerName(String loadBalancerDns) {
+        return fn.select(0, fn.split(".elb.", loadBalancerDns));
+    }
+}
+```
+
+You can now unit test this method:
+```java
+@Test
+void extractLoadBalancerNameTest() {
+    var yourClass = new YourClass(new FnLocal());
+    assertEquals(
+        "myLoadBalancer",
+        yourClass.extractLoadBalancerName("myLoadBalancer.elb.region.amazonaws.com")    
+    );
+}
+```
+
 ## Build
 ```shell-script
-gradle compile
+gradle compileJava
 ```
 
 ## Test
