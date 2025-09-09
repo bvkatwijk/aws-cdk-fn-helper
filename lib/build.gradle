@@ -12,9 +12,9 @@ plugins {
     id 'signing'
 }
 
-group 'nl.bvkatwijk.awscdkfnhelper'
-description 'default project description'
-version '0.1.0-SNAPSHOT'
+group = 'nl.bvkatwijk.awscdkfnhelper'
+description = 'default project description'
+version = '0.1.0-SNAPSHOT'
 
 configurations {
     testCompile.extendsFrom compileOnly
@@ -65,7 +65,7 @@ jacocoTestReport {
 }
 
 testlogger {
-    slowThreshold 500
+    slowThreshold = 500
 }
 
 clean { delete += "tmp" }
