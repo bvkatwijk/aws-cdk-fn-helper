@@ -1,5 +1,6 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -142,7 +143,7 @@ public class FnLocal implements IFn {
 
     @Override
     public List<String> split(String delimiter, String source) {
-        return List.of();
+        return Arrays.asList(source.split(delimiter));
     }
 
     @Override
