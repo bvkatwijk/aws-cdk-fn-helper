@@ -1,0 +1,22 @@
+*.class
+*.log
+
+# IDE Specific Files
+.cache*
+.classpath
+.project
+.settings
+target/
+/bin/
+.idea
+*.iml
+
+# Build files
+.gradle/
+build/
+
+# OS files
+.DS_Store
+
+# Sensitive files
+.env

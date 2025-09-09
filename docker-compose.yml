@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  gradle:
+    image: gradle:9.0.0-jdk24
+    entrypoint: gradle
+    working_dir: /usr/src/app
+    command: "--help"
+    tty: true
+    volumes:
+      - .:/usr/src/app
