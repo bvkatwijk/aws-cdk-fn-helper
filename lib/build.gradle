@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'com.adarshr.test-logger' version '4.0.0'
+}
+
+group 'nl.bvkatwijk.awscdkfnhelper'
+description 'default project description'
+version '0.1.0'
+
+configurations {
+    testCompile.extendsFrom compileOnly
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
+    implementation libs.vavr
+
+    testImplementation libs.junit.jupiter
+    testImplementation libs.junit.jupiter.api
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = false
+    }
+}
+
+testlogger {
+    slowThreshold 500
+}
+
+clean { delete += "tmp" }
+
+tasks.withType(Zip) { task ->
+    task.doLast {
+        ant.checksum file: it.archivePath
+    }
+}

@@ -1,0 +1,68 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'application'
+    id 'jacoco'
+    id 'com.adarshr.test-logger' version '4.0.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    testCompile.extendsFrom compileOnly
+}
+
+group 'nl.bvkatwijk.awscdkfnhelper'
+version = '0.1.0'
+
+dependencies {
+    implementation libs.vavr
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
+    // https://mvnrepository.com/artifact/software.amazon.awscdk/aws-cdk-lib
+    implementation("software.amazon.awscdk:aws-cdk-lib:2.213.0")
+
+    testImplementation libs.junit.jupiter
+    testImplementation libs.junit.jupiter.api
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
+}
+
+application {
+    mainClass = 'nl.bvkatwijk.awscdkfnhelper.App'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+testlogger {
+    slowThreshold 500
+}
