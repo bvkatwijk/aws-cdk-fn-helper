@@ -1,14 +1,15 @@
-package nl.bvkatwijk.awscdkfnhelper;
+package nl.bvkatwijk.awscdkfnhelper.gen;
 
 import io.vavr.Function1;
 import io.vavr.collection.List;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Generator {
+public record Generator() {
     private static final String IND = "\t";
 
     public static void main(String[] args) {
@@ -20,6 +21,15 @@ public class Generator {
         var path = Path.of(this.getClass().getResource("Fn.java").toURI());
         var file = Files.readString(path);
         var methods = extractMethods(file);
+
+        writeInterface(methods);
+    }
+
+    @SneakyThrows
+    private void writeInterface(List<Method> methods) {
+        var writer = new FileWriter("./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/IFn.java");
+        writer.write("TODO");
+        writer.close();
     }
 
     private List<Method> extractMethods(String file) {
