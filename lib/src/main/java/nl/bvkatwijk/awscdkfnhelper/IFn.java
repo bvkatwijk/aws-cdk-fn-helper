@@ -1,5 +1,11 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
+import software.amazon.awscdk.ICfnConditionExpression;
+
+import software.amazon.awscdk.ICfnRuleConditionExpression;
+
+import software.amazon.awscdk.IResolvable;
+
 public interface IFn {
 	/**
 	* The intrinsic function <code>Fn::Base64</code> returns the Base64 representation of the input string.

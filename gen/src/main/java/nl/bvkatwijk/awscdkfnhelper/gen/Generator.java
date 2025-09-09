@@ -31,6 +31,9 @@ public record Generator() {
         writer.write(List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
+            "import software.amazon.awscdk.ICfnConditionExpression;\n",
+            "import software.amazon.awscdk.ICfnRuleConditionExpression;\n",
+            "import software.amazon.awscdk.IResolvable;\n",
             "public interface IFn {",
                 methods.flatMap(Method::interfaceDeclaration).map(Generator::indent).mkString("\n"),
             "}"
