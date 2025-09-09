@@ -23,6 +23,25 @@ public record Generator() {
         var methods = extractMethods(file);
 
         writeInterface(methods);
+        writeDelegator(methods);
+    }
+
+    @SneakyThrows
+    private void writeDelegator(List<Method> methods) {
+        var writer = new FileWriter("./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/FnDelegate.java");
+        writer.write(List.of(
+            "package nl.bvkatwijk.awscdkfnhelper;",
+            "",
+            "import software.amazon.awscdk.Fn;\n",
+            "import software.amazon.awscdk.$Module;\n",
+            "import software.amazon.awscdk.ICfnConditionExpression;\n",
+            "import software.amazon.awscdk.ICfnRuleConditionExpression;\n",
+            "import software.amazon.awscdk.IResolvable;\n",
+            "public class FnDelegate {",
+            methods.flatMap(Method::delegation).map(Generator::indent).mkString("\n"),
+            "}"
+        ).mkString("", "\n", "\n"));
+        writer.close();
     }
 
     @SneakyThrows
@@ -117,12 +136,26 @@ public record Generator() {
 
         public List<String> interfaceDeclaration() {
             return meta
-                .append(returnType + " " + name + "(" + declareParams(parameters) + ");\n");
+                .append(returnType + " " + name + "(" + paramDeclarations(parameters) + ");\n");
         }
 
-        private String declareParams(List<MethodSource.Parameter> parameters) {
+        private String paramDeclarations(List<MethodSource.Parameter> parameters) {
             return parameters
                 .map(MethodSource.Parameter::declaration)
+                .mkString(", ");
+        }
+
+        public List<String> delegation() {
+            return List.of(
+                "public " + returnType + " " + name + "(" + paramDeclarations(parameters) + ") {",
+                indent("return Fn." + name + "(" + paramArgs(parameters) + ");"),
+                "}"
+            );
+        }
+
+        private String paramArgs(List<MethodSource.Parameter> parameters) {
+            return parameters
+                .map(MethodSource.Parameter::name)
                 .mkString(", ");
         }
     }

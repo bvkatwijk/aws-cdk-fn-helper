@@ -30,6 +30,9 @@ dependencies {
 
     implementation libs.vavr
 
+    // https://mvnrepository.com/artifact/software.amazon.awscdk/aws-cdk-lib
+    implementation("software.amazon.awscdk:aws-cdk-lib:2.213.0")
+
     testImplementation libs.junit.jupiter
     testImplementation libs.junit.jupiter.api
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
