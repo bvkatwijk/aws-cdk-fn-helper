@@ -32,6 +32,7 @@ public record Generator() {
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public interface IFn {",
+                methods.flatMap(Method::interfaceDeclaration).map(Generator::indent).mkString("\n"),
             "}"
         ).mkString("", "\n", "\n"));
         writer.close();
@@ -55,7 +56,11 @@ public record Generator() {
             );
         }
 
-        public record Parameter(String type, String name) { }
+        public record Parameter(String type, String name) {
+            public String declaration() {
+                return type + " " + name;
+            }
+        }
 
         private List<Parameter> parameters(List<String> source) {
             return Function1.<List<String>>identity()
@@ -102,8 +107,22 @@ public record Generator() {
     }
 
     public record Method(
-        List<String> meta, String name,
-        String s, List<MethodSource.Parameter> parameters) { }
+        List<String> meta,
+        String name,
+        String returnType,
+        List<MethodSource.Parameter> parameters) {
+
+        public List<String> interfaceDeclaration() {
+            return meta
+                .append(returnType + " " + name + "(" + declareParams(parameters) + ");\n");
+        }
+
+        private String declareParams(List<MethodSource.Parameter> parameters) {
+            return parameters
+                .map(MethodSource.Parameter::declaration)
+                .mkString(", ");
+        }
+    }
 
     public static String indent(String s) {
         return IND + s;
