@@ -43,11 +43,45 @@ public record Generator() {
     public record MethodSource(List<String> source) {
         public Method toMethod() {
             return new Method(
-                extractName(source)
+                meta(source),
+                name(source),
+                returnType(source),
+                parameters(source)
             );
         }
 
-        private String extractName(List<String> source) {
+        public record Parameter(String type, String name) { }
+
+        private List<Parameter> parameters(List<String> source) {
+            return Function1.<List<String>>identity()
+                .andThen(this::declaration)
+                .andThen(it -> StringUtils.substringBetween(it, "(", ")"))
+                .andThen(it -> it.split(", (?![^<]*>)"))
+                .andThen(List::of)
+                .andThen(it -> it.map(String::trim))
+                .andThen(it -> it.filter(StringUtils::isNotBlank))
+                .andThen(it -> it.map(param -> {
+                    var type = StringUtils.substringBeforeLast(param, " ").trim();
+                    var name = StringUtils.substringAfterLast(param, " ").trim();
+                    return new Parameter(type, name);
+                }))
+                .apply(source);
+        }
+
+        private String returnType(List<String> source) {
+            return Function1.<List<String>>identity()
+                .andThen(this::declaration)
+                .andThen(it -> StringUtils.substringBefore(it, "("))
+                .andThen(it -> StringUtils.substringBeforeLast(it, " "))
+                .andThen(it -> StringUtils.substringAfterLast(it, " "))
+                .apply(source);
+        }
+
+        private List<String> meta(List<String> source) {
+            return source.takeUntil(it -> it.startsWith("public static"));
+        }
+
+        private String name(List<String> source) {
             return Function1.<List<String>>identity()
                 .andThen(this::declaration)
                 .andThen(it -> StringUtils.substringBefore(it, "("))
@@ -60,13 +94,11 @@ public record Generator() {
                 .find(it -> it.startsWith("public static"))
                 .getOrElseThrow(() -> new IllegalArgumentException("No public static in " + source));
         }
-
-
     }
 
     public record Method(
-        String name
-        ) { }
+        List<String> meta, String name,
+        String s, List<MethodSource.Parameter> parameters) { }
 
     public static String indent(String s) {
         return IND + s;
