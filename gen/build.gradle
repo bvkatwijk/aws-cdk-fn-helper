@@ -32,6 +32,9 @@ dependencies {
     // https://mvnrepository.com/artifact/software.amazon.awscdk/aws-cdk-lib
     implementation("software.amazon.awscdk:aws-cdk-lib:2.213.0")
 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
+
     testImplementation libs.junit.jupiter
     testImplementation libs.junit.jupiter.api
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
