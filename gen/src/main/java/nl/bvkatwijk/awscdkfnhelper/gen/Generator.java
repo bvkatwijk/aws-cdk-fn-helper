@@ -28,7 +28,12 @@ public record Generator() {
     @SneakyThrows
     private void writeInterface(List<Method> methods) {
         var writer = new FileWriter("./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/IFn.java");
-        writer.write("TODO");
+        writer.write(List.of(
+            "package nl.bvkatwijk.awscdkfnhelper;",
+            "",
+            "public interface IFn {",
+            "}"
+        ).mkString("", "\n", "\n"));
         writer.close();
     }
 
