@@ -24,6 +24,36 @@ public record Generator() {
 
         writeInterface(methods);
         writeDelegator(methods);
+        writeLocalTest(methods);
+    }
+
+    @SneakyThrows
+    private void writeLocalTest(List<Method> methods) {
+        var writer = new FileWriter("./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalTestGen.java");
+        writer.write(List.of(
+            "package nl.bvkatwijk.awscdkfnhelper;",
+            "",
+            "import org.junit.jupiter.api.Nested;",
+            "import org.junit.jupiter.api.Test;",
+            "",
+            "import java.util.List;",
+            "",
+            "import static org.junit.jupiter.api.Assertions.assertEquals;",
+            "",
+            "public class FnLocalTestGen {",
+            indent("public final FnLocal fn = new FnLocal();"),
+            "",
+            allTests(methods),
+            "}"
+        ).mkString("", "\n", "\n"));
+        writer.close();
+    }
+
+    private static String allTests(List<Method> methods) {
+        return methods
+            .flatMap(Method::test)
+            .map(Generator::indent)
+            .mkString("\n");
     }
 
     @SneakyThrows
@@ -46,7 +76,7 @@ public record Generator() {
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public interface IFn {",
-                methods.flatMap(Method::interfaceDeclaration).map(Generator::indent).mkString("\n"),
+            methods.flatMap(Method::interfaceDeclaration).map(Generator::indent).mkString("\n"),
             "}"
         ).mkString("", "\n", "\n"));
         writer.close();
@@ -150,9 +180,39 @@ public record Generator() {
                 .map(MethodSource.Parameter::name)
                 .mkString(", ");
         }
+
+        public List<String> test() {
+            return List.of(
+                "@Nested",
+                "class " + testClassName() + " {",
+                testBody()
+                    .map(Generator::indent)
+                    .mkString("\n"),
+                "}\n"
+            );
+        }
+
+        private List<String> testBody() {
+            return List.of(
+                "@Test",
+                "void canonical() {",
+                indent("throw new IllegalStateException(\"Not Implemented Yet\");"),
+                "}"
+            );
+        }
+
+        private String testClassName() {
+            return capitalize(name)
+                + parameters.map(MethodSource.Parameter::name).map(Generator::capitalize).mkString()
+                + "Test";
+        }
     }
 
     public static String indent(String s) {
         return IND + s;
+    }
+
+    public static String capitalize(String s) {
+        return StringUtils.capitalize(s);
     }
 }

@@ -1,0 +1,7 @@
+@Nested
+class MethodNameParamTest {
+	@Test
+	void canonical() {
+		throw new IllegalStateException("Not Implemented Yet");
+	}
+}
