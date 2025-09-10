@@ -1,5 +1,6 @@
 # aws-cdk-fn-helper - default project description
 
+[![Maven Central Version](https://img.shields.io/maven-central/v/nl.bvkatwijk/aws-cdk-fn-helper?versionPrefix=0)](https://mvnrepository.com/artifact/nl.bvkatwijk/aws-cdk-fn-helper)
 [![CI](https://github.com/bvkatwijk/aws-cdk-fn-helper/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/bvkatwijk/aws-cdk-fn-helper/actions/)
 [![codecov](https://codecov.io/gh/bvkatwijk/aws-cdk-fn-helper/branch/master/graph/badge.svg)](https://codecov.io/gh/bvkatwijk/aws-cdk-fn-helper)
 
