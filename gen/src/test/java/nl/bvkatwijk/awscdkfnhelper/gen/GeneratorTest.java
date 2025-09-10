@@ -5,18 +5,25 @@ import org.approvaltests.Approvals;
 import org.junit.jupiter.api.Test;
 
 class GeneratorTest {
-    @Test
-    void testMethod() {
-        Approvals.verify(new Generator.Method(
+    public static final Generator.MethodSource.Parameter STRING_PARAM =
+        new Generator.MethodSource.Parameter(
+            "String",
+            "param"
+        );
+
+    private static Generator.Method METHOD_SIMPLE() {
+        return new Generator.Method(
             List.of(),
             "methodName",
             "String",
             List.of(
-                new Generator.MethodSource.Parameter(
-                    "String",
-                    "param"
-                )
+                STRING_PARAM
             )
-        ).test().mkString("\n"));
+        );
+    }
+
+    @Test
+    void testMethod() {
+        Approvals.verify(METHOD_SIMPLE().test().mkString("\n"));
     }
 }
