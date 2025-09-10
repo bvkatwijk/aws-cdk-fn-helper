@@ -13,8 +13,8 @@ plugins {
 }
 
 group = 'nl.bvkatwijk.awscdkfnhelper'
-description = 'default project description'
-version = '0.1.0-SNAPSHOT'
+description = 'Unit testing for Fn intrinsic functions'
+version = '0.1.0'
 
 configurations {
     testCompile.extendsFrom compileOnly
@@ -48,6 +48,10 @@ java {
     }
 }
 
+javadoc {
+    failOnError = false
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -69,12 +73,6 @@ testlogger {
 }
 
 clean { delete += "tmp" }
-
-tasks.withType(Zip) { task ->
-    task.doLast {
-        ant.checksum file: it.archivePath
-    }
-}
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
@@ -135,5 +133,11 @@ publishing {
 
             }
         }
+    }
+}
+
+tasks.withType(Zip) { task ->
+    task.doLast {
+        ant.checksum file: task.archiveFile.get().asFile
     }
 }
