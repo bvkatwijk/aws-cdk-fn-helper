@@ -21,3 +21,4 @@ build/
 # Sensitive files
 .env
 *.zip
+*.received.txt
