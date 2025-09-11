@@ -104,6 +104,14 @@ public record Generator() {
             public String declaration() {
                 return type + " " + name;
             }
+
+            public String testInputValue() {
+                return switch (StringUtils.substringAfterLast(type, " ")) {
+                    case "java.lang.String" -> "\"" + name + "\"";
+                    case "java.lang.Object" -> "new SomeObject()";
+                    default -> name;
+                };
+            }
         }
 
         private List<Parameter> parameters(List<String> source) {
@@ -201,7 +209,7 @@ public record Generator() {
                 .appendAll(List.of(
                     """
                         List.of("tg", "abc-123", "def-456"),""",
-                    "fn." + name + "(\"/\", \"tg/abc-123/def-456\")"
+                    "fn." + name + "(" + parameters.map(MethodSource.Parameter::testInputValue).mkString(", ") + ")"
                 ).map(Generator::indent))
                 .append(");");
         }
