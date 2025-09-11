@@ -13,7 +13,7 @@ public class FnLocalTest {
     @Nested
     class SplitDelimiterSourceTest {
         @Test
-        void canonical_0() {
+        void docs_examples_0() {
             assertEquals(
                 List.of("a", "b", "c"),
                 fn.split("|", "a|b|c")
@@ -21,7 +21,7 @@ public class FnLocalTest {
         }
 
         @Test
-        void canonical_1() {
+        void docs_examples_1() {
             assertEquals(
                 List.of("a", "", "c", ""),
                 fn.split("|", "a||c|")
