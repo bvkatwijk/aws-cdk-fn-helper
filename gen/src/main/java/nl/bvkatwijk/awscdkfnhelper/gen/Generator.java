@@ -201,8 +201,7 @@ public record Generator() {
                 .appendAll(List.of(
                     """
                         List.of("tg", "abc-123", "def-456"),""",
-                    """
-                        fn.split("/", "tg/abc-123/def-456")"""
+                    "fn." + name + "(\"/\", \"tg/abc-123/def-456\")"
                 ).map(Generator::indent))
                 .append(");");
         }
