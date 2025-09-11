@@ -26,4 +26,19 @@ class GeneratorTest {
     void testMethod() {
         Approvals.verify(METHOD_SIMPLE().test().mkString("\n"));
     }
+
+    @Test
+    void testBody() {
+        Approvals.verify(METHOD_SIMPLE().testBody().mkString("\n"));
+    }
+
+    @Test
+    void delegation() {
+        Approvals.verify(METHOD_SIMPLE().delegation().mkString("\n"));
+    }
+
+    @Test
+    void interfaceDeclaration() {
+        Approvals.verify(METHOD_SIMPLE().interfaceDeclaration().mkString("\n"));
+    }
 }

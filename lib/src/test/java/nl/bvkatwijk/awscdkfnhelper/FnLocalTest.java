@@ -11,7 +11,7 @@ class FnLocalTest {
     public final FnLocal fn = new FnLocal();
 
 	@Nested
-    class SplitTest {
+    class SplitDelimiterSourceTest {
         @Test
         void simple() {
             assertEquals(

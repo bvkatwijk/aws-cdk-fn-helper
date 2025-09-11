@@ -29,7 +29,7 @@ public record Generator() {
 
     @SneakyThrows
     private void writeLocalTest(List<Method> methods) {
-        var writer = new FileWriter("./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalTestGen.java");
+        var writer = new FileWriter("./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalGenTest.java");
         writer.write(List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
@@ -40,7 +40,7 @@ public record Generator() {
             "",
             "import static org.junit.jupiter.api.Assertions.assertEquals;",
             "",
-            "public class FnLocalTestGen {",
+            "public class FnLocalGenTest {",
             indent("public final FnLocal fn = new FnLocal();"),
             "",
             allTests(methods),
@@ -192,11 +192,11 @@ public record Generator() {
             );
         }
 
-        private List<String> testBody() {
+        public List<String> testBody() {
             return List.of(
                 "@Test",
                 "void canonical() {",
-                indent("throw new IllegalStateException(\"Not Implemented Yet\");"),
+                indent("FnLocalTest." + testClassName() + ".canonical();"),
                 "}"
             );
         }
