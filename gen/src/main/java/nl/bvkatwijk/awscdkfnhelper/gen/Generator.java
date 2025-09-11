@@ -185,9 +185,8 @@ public record Generator() {
         public List<String> test() {
             return List.of("@Nested")
                 .append("class " + testClassName() + " {")
-                .appendAll(
-                    testMethod()
-                        .map(Generator::indent))
+                .appendAll(testMethod()
+                    .map(Generator::indent))
                 .append("}\n");
         }
 
