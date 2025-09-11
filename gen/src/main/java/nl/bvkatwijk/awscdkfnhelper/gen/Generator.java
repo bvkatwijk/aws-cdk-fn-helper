@@ -199,7 +199,7 @@ public record Generator() {
 
         public List<String> testMethod() {
             return List.of("@Test")
-                .append("void canonical() {")
+                .append("void doc_examples_0() {")
                 .appendAll(testBody().map(Generator::indent))
                 .append("}");
         }
