@@ -14,7 +14,7 @@ public class FnLocalGenTest {
 	class Base64DataTest {
 		@Test
 	void canonical() {
-		FnLocalTest.Base64DataTest.canonical();
+		new FnLocalTest.Base64DataTest().canonical();
 	}
 	}
 
@@ -22,7 +22,7 @@ public class FnLocalGenTest {
 	class CidrIpBlockCountSizeMaskTest {
 		@Test
 	void canonical() {
-		FnLocalTest.CidrIpBlockCountSizeMaskTest.canonical();
+		new FnLocalTest.CidrIpBlockCountSizeMaskTest().canonical();
 	}
 	}
 
@@ -30,7 +30,7 @@ public class FnLocalGenTest {
 	class CidrIpBlockCountTest {
 		@Test
 	void canonical() {
-		FnLocalTest.CidrIpBlockCountTest.canonical();
+		new FnLocalTest.CidrIpBlockCountTest().canonical();
 	}
 	}
 
@@ -38,7 +38,7 @@ public class FnLocalGenTest {
 	class ConditionAndConditionsTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionAndConditionsTest.canonical();
+		new FnLocalTest.ConditionAndConditionsTest().canonical();
 	}
 	}
 
@@ -46,7 +46,7 @@ public class FnLocalGenTest {
 	class ConditionContainsListOfStringsValueTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionContainsListOfStringsValueTest.canonical();
+		new FnLocalTest.ConditionContainsListOfStringsValueTest().canonical();
 	}
 	}
 
@@ -54,7 +54,7 @@ public class FnLocalGenTest {
 	class ConditionEachMemberEqualsListOfStringsValueTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionEachMemberEqualsListOfStringsValueTest.canonical();
+		new FnLocalTest.ConditionEachMemberEqualsListOfStringsValueTest().canonical();
 	}
 	}
 
@@ -62,7 +62,7 @@ public class FnLocalGenTest {
 	class ConditionEachMemberInStringsToCheckStringsToMatchTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionEachMemberInStringsToCheckStringsToMatchTest.canonical();
+		new FnLocalTest.ConditionEachMemberInStringsToCheckStringsToMatchTest().canonical();
 	}
 	}
 
@@ -70,7 +70,7 @@ public class FnLocalGenTest {
 	class ConditionEqualsLhsRhsTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionEqualsLhsRhsTest.canonical();
+		new FnLocalTest.ConditionEqualsLhsRhsTest().canonical();
 	}
 	}
 
@@ -78,7 +78,7 @@ public class FnLocalGenTest {
 	class ConditionIfConditionIdValueIfTrueValueIfFalseTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionIfConditionIdValueIfTrueValueIfFalseTest.canonical();
+		new FnLocalTest.ConditionIfConditionIdValueIfTrueValueIfFalseTest().canonical();
 	}
 	}
 
@@ -86,7 +86,7 @@ public class FnLocalGenTest {
 	class ConditionNotConditionTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionNotConditionTest.canonical();
+		new FnLocalTest.ConditionNotConditionTest().canonical();
 	}
 	}
 
@@ -94,7 +94,7 @@ public class FnLocalGenTest {
 	class ConditionOrConditionsTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ConditionOrConditionsTest.canonical();
+		new FnLocalTest.ConditionOrConditionsTest().canonical();
 	}
 	}
 
@@ -102,7 +102,7 @@ public class FnLocalGenTest {
 	class FindInMapMapNameTopLevelKeySecondLevelKeyDefaultValueTest {
 		@Test
 	void canonical() {
-		FnLocalTest.FindInMapMapNameTopLevelKeySecondLevelKeyDefaultValueTest.canonical();
+		new FnLocalTest.FindInMapMapNameTopLevelKeySecondLevelKeyDefaultValueTest().canonical();
 	}
 	}
 
@@ -110,7 +110,7 @@ public class FnLocalGenTest {
 	class FindInMapMapNameTopLevelKeySecondLevelKeyTest {
 		@Test
 	void canonical() {
-		FnLocalTest.FindInMapMapNameTopLevelKeySecondLevelKeyTest.canonical();
+		new FnLocalTest.FindInMapMapNameTopLevelKeySecondLevelKeyTest().canonical();
 	}
 	}
 
@@ -118,7 +118,7 @@ public class FnLocalGenTest {
 	class GetAttLogicalNameOfResourceAttributeNameTest {
 		@Test
 	void canonical() {
-		FnLocalTest.GetAttLogicalNameOfResourceAttributeNameTest.canonical();
+		new FnLocalTest.GetAttLogicalNameOfResourceAttributeNameTest().canonical();
 	}
 	}
 
@@ -126,7 +126,7 @@ public class FnLocalGenTest {
 	class GetAzsRegionTest {
 		@Test
 	void canonical() {
-		FnLocalTest.GetAzsRegionTest.canonical();
+		new FnLocalTest.GetAzsRegionTest().canonical();
 	}
 	}
 
@@ -134,7 +134,7 @@ public class FnLocalGenTest {
 	class GetAzsTest {
 		@Test
 	void canonical() {
-		FnLocalTest.GetAzsTest.canonical();
+		new FnLocalTest.GetAzsTest().canonical();
 	}
 	}
 
@@ -142,7 +142,7 @@ public class FnLocalGenTest {
 	class ImportListValueSharedValueToImportAssumedLengthDelimiterTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ImportListValueSharedValueToImportAssumedLengthDelimiterTest.canonical();
+		new FnLocalTest.ImportListValueSharedValueToImportAssumedLengthDelimiterTest().canonical();
 	}
 	}
 
@@ -150,7 +150,7 @@ public class FnLocalGenTest {
 	class ImportListValueSharedValueToImportAssumedLengthTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ImportListValueSharedValueToImportAssumedLengthTest.canonical();
+		new FnLocalTest.ImportListValueSharedValueToImportAssumedLengthTest().canonical();
 	}
 	}
 
@@ -158,7 +158,7 @@ public class FnLocalGenTest {
 	class ImportValueSharedValueToImportTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ImportValueSharedValueToImportTest.canonical();
+		new FnLocalTest.ImportValueSharedValueToImportTest().canonical();
 	}
 	}
 
@@ -166,7 +166,7 @@ public class FnLocalGenTest {
 	class JoinDelimiterListOfValuesTest {
 		@Test
 	void canonical() {
-		FnLocalTest.JoinDelimiterListOfValuesTest.canonical();
+		new FnLocalTest.JoinDelimiterListOfValuesTest().canonical();
 	}
 	}
 
@@ -174,7 +174,7 @@ public class FnLocalGenTest {
 	class LenArrayTest {
 		@Test
 	void canonical() {
-		FnLocalTest.LenArrayTest.canonical();
+		new FnLocalTest.LenArrayTest().canonical();
 	}
 	}
 
@@ -182,7 +182,7 @@ public class FnLocalGenTest {
 	class ParseDomainNameUrlTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ParseDomainNameUrlTest.canonical();
+		new FnLocalTest.ParseDomainNameUrlTest().canonical();
 	}
 	}
 
@@ -190,7 +190,7 @@ public class FnLocalGenTest {
 	class RefLogicalNameTest {
 		@Test
 	void canonical() {
-		FnLocalTest.RefLogicalNameTest.canonical();
+		new FnLocalTest.RefLogicalNameTest().canonical();
 	}
 	}
 
@@ -198,7 +198,7 @@ public class FnLocalGenTest {
 	class RefAllParameterTypeTest {
 		@Test
 	void canonical() {
-		FnLocalTest.RefAllParameterTypeTest.canonical();
+		new FnLocalTest.RefAllParameterTypeTest().canonical();
 	}
 	}
 
@@ -206,7 +206,7 @@ public class FnLocalGenTest {
 	class SelectIndexArrayTest {
 		@Test
 	void canonical() {
-		FnLocalTest.SelectIndexArrayTest.canonical();
+		new FnLocalTest.SelectIndexArrayTest().canonical();
 	}
 	}
 
@@ -214,7 +214,7 @@ public class FnLocalGenTest {
 	class SplitDelimiterSourceAssumedLengthTest {
 		@Test
 	void canonical() {
-		FnLocalTest.SplitDelimiterSourceAssumedLengthTest.canonical();
+		new FnLocalTest.SplitDelimiterSourceAssumedLengthTest().canonical();
 	}
 	}
 
@@ -222,7 +222,7 @@ public class FnLocalGenTest {
 	class SplitDelimiterSourceTest {
 		@Test
 	void canonical() {
-		FnLocalTest.SplitDelimiterSourceTest.canonical();
+		new FnLocalTest.SplitDelimiterSourceTest().canonical();
 	}
 	}
 
@@ -230,7 +230,7 @@ public class FnLocalGenTest {
 	class SubBodyVariablesTest {
 		@Test
 	void canonical() {
-		FnLocalTest.SubBodyVariablesTest.canonical();
+		new FnLocalTest.SubBodyVariablesTest().canonical();
 	}
 	}
 
@@ -238,7 +238,7 @@ public class FnLocalGenTest {
 	class SubBodyTest {
 		@Test
 	void canonical() {
-		FnLocalTest.SubBodyTest.canonical();
+		new FnLocalTest.SubBodyTest().canonical();
 	}
 	}
 
@@ -246,7 +246,7 @@ public class FnLocalGenTest {
 	class ToJsonStringObjectTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ToJsonStringObjectTest.canonical();
+		new FnLocalTest.ToJsonStringObjectTest().canonical();
 	}
 	}
 
@@ -254,7 +254,7 @@ public class FnLocalGenTest {
 	class TransformMacroNameParametersTest {
 		@Test
 	void canonical() {
-		FnLocalTest.TransformMacroNameParametersTest.canonical();
+		new FnLocalTest.TransformMacroNameParametersTest().canonical();
 	}
 	}
 
@@ -262,7 +262,7 @@ public class FnLocalGenTest {
 	class ValueOfParameterOrLogicalIdAttributeTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ValueOfParameterOrLogicalIdAttributeTest.canonical();
+		new FnLocalTest.ValueOfParameterOrLogicalIdAttributeTest().canonical();
 	}
 	}
 
@@ -270,7 +270,7 @@ public class FnLocalGenTest {
 	class ValueOfAllParameterTypeAttributeTest {
 		@Test
 	void canonical() {
-		FnLocalTest.ValueOfAllParameterTypeAttributeTest.canonical();
+		new FnLocalTest.ValueOfAllParameterTypeAttributeTest().canonical();
 	}
 	}
 

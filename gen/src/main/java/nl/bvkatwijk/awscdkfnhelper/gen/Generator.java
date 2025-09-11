@@ -196,7 +196,7 @@ public record Generator() {
             return List.of(
                 "@Test",
                 "void canonical() {",
-                indent("FnLocalTest." + testClassName() + ".canonical();"),
+                indent("new FnLocalTest." + testClassName() + "().canonical();"),
                 "}"
             );
         }
