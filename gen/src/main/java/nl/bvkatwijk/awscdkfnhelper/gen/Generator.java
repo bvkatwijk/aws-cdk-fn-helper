@@ -4,6 +4,7 @@ import io.vavr.Function1;
 import io.vavr.collection.List;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -182,23 +183,30 @@ public record Generator() {
         }
 
         public List<String> test() {
-            return List.of(
-                "@Nested",
-                "class " + testClassName() + " {",
-                testBody()
-                    .map(Generator::indent)
-                    .mkString("\n"),
-                "}\n"
-            );
+            return List.of("@Nested")
+                .append("class " + testClassName() + " {")
+                .appendAll(
+                    testMethod()
+                        .map(Generator::indent))
+                .append("}\n");
         }
 
-        public List<String> testBody() {
-            return List.of(
-                "@Test",
-                "void canonical() {",
-                indent("new FnLocalTest." + testClassName() + "().canonical();"),
-                "}"
-            );
+        public List<String> testMethod() {
+            return List.of("@Test")
+                .append("void canonical() {")
+                .appendAll(testBody().map(Generator::indent))
+                .append("}");
+        }
+
+        private List<String> testBody() {
+            return List.of("assertEquals(")
+                .appendAll(List.of(
+                    """
+                        List.of("tg", "abc-123", "def-456")""",
+                    """
+                        fn.split("/", "tg/abc-123/def-456")"""
+                ).map(Generator::indent))
+                .append(");");
         }
 
         private String testClassName() {

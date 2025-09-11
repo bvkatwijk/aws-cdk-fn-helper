@@ -29,7 +29,7 @@ class GeneratorTest {
 
     @Test
     void testBody() {
-        Approvals.verify(METHOD_SIMPLE().testBody().mkString("\n"));
+        Approvals.verify(METHOD_SIMPLE().testMethod().mkString("\n"));
     }
 
     @Test
