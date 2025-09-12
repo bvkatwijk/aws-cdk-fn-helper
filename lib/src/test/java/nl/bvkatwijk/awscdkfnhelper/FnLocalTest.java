@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FnLocalTest {
@@ -51,6 +52,18 @@ public class FnLocalTest {
             assertEquals(
                 3,
                 fn.len(new String[]{"a", "b", "c"})
+            );
+        }
+    }
+
+    @Nested
+    class ParseDomainNameUrlTest {
+        @Test
+        void tests() {
+            assertAll(
+                () -> assertEquals("example.com", fn.parseDomainName("https://www.example.com/path?q=123")),
+                () -> assertEquals("sub.domain.co.uk", fn.parseDomainName("http://sub.domain.co.uk/test")),
+                () -> assertEquals("example.org", fn.parseDomainName("example.org/something"))
             );
         }
     }

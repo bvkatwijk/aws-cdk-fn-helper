@@ -1,10 +1,12 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import software.amazon.awscdk.ICfnRuleConditionExpression;
 import software.amazon.awscdk.IResolveContext;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -139,9 +141,16 @@ public class FnLocal implements IFn {
         return ((Object[]) array).length;
     }
 
+    @SneakyThrows
     @Override
     public String parseDomainName(String url) {
-        return "";
+        if (!url.matches("^[a-zA-Z][a-zA-Z0-9+.-]*://.*")) {
+            url = "http://" + url;
+        }
+        var domain = new URI(url).getHost();
+        return domain.startsWith("www.")
+            ? domain.substring(4)
+            : domain;
     }
 
     @Override
