@@ -51,7 +51,22 @@ public class FnLocal implements IFn {
 
     @Override
     public software.amazon.awscdk.ICfnRuleConditionExpression conditionEquals(Object lhs, Object rhs) {
-        return null;
+        return new ICfnRuleConditionExpression() {
+            @Override
+            public @NotNull Boolean getDisambiguator() {
+                return null;
+            }
+
+            @Override
+            public @NotNull List<String> getCreationStack() {
+                return List.of();
+            }
+
+            @Override
+            public @NotNull Object resolve(@NotNull IResolveContext context) {
+                return lhs.equals(rhs);
+            }
+        };
     }
 
     @Override
