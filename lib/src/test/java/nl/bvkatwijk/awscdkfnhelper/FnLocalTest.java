@@ -56,6 +56,17 @@ public class FnLocalTest {
     }
 
     @Nested
+    class SelectIndexArrayTest {
+        @Test
+        void doc_examples_0() {
+            assertEquals(
+                "grapes",
+                fn.select(1, List.of("apples", "grapes", "oranges", "mangoes"))
+            );
+        }
+    }
+
+    @Nested
     class SplitDelimiterSourceTest {
         @Test
         void docs_examples_0() {

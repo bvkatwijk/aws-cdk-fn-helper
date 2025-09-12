@@ -156,7 +156,7 @@ public class FnLocal implements IFn {
 
     @Override
     public String select(Number index, List<String> array) {
-        return "";
+        return array.get(index.intValue());
     }
 
     @Override
