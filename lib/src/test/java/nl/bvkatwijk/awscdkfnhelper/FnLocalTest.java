@@ -22,6 +22,18 @@ public class FnLocalTest {
     }
 
     @Nested
+    class ConditionEqualsLhsRhsTest {
+        @Test
+        void doc_examples_0() {
+            assertEquals(
+                false,
+                //TODO use example from docs after implementing ref
+                fn.conditionEquals(new Object(), new Object()).resolve(null)
+            );
+        }
+    }
+
+    @Nested
     class JoinDelimiterListOfValuesTest {
         @Test
         void doc_examples_0() {
