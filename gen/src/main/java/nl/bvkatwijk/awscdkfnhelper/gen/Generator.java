@@ -29,7 +29,7 @@ public record Generator() {
 
     @SneakyThrows
     private void writeLocalTest(List<Method> methods) {
-        var writer = new FileWriter("./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalTest.java");
+        var writer = new FileWriter("./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalTestExample.java");
         writer.write(List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
@@ -40,7 +40,7 @@ public record Generator() {
             "",
             "import static org.junit.jupiter.api.Assertions.assertEquals;",
             "",
-            "public class FnLocalTest {",
+            "public class FnLocalTestExample {",
             indent("public final FnLocal fn = new FnLocal();"),
             "",
             allTests(methods),

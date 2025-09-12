@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FnLocal implements IFn {
 
@@ -112,7 +113,7 @@ public class FnLocal implements IFn {
 
     @Override
     public String join(String delimiter, List<String> listOfValues) {
-        return "";
+        return String.join(delimiter, listOfValues);
     }
 
     @Override

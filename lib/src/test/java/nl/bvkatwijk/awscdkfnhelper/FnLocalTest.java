@@ -23,6 +23,17 @@ public class FnLocalTest {
     }
 
     @Nested
+    class JoinDelimiterListOfValuesTest {
+        @Test
+        void doc_examples_0() {
+            assertEquals(
+                "a:b:c",
+                fn.join(":", List.of("a", "b", "c"))
+            );
+        }
+    }
+
+    @Nested
     class SplitDelimiterSourceTest {
         @Test
         void docs_examples_0() {
