@@ -1,7 +1,8 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
+import lombok.NonNull;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -143,11 +144,8 @@ public class FnLocal implements IFn {
     }
 
     @Override
-    public List<String> split(String delimiter, String source) {
+    public List<String> split(@NonNull String delimiter, @NonNull String source) {
         List<String> parts = new ArrayList<>();
-        if (delimiter.isEmpty()) {
-            throw new IllegalArgumentException("Delimiter cannot be empty");
-        }
         var start = 0;
         int index;
         while ((index = source.indexOf(delimiter, start)) != -1) {
