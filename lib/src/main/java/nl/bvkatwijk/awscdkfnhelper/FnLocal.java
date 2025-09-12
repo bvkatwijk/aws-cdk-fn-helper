@@ -1,6 +1,9 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
+import software.amazon.awscdk.ICfnRuleConditionExpression;
+import software.amazon.awscdk.IResolveContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
