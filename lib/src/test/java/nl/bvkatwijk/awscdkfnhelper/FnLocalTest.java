@@ -1,6 +1,5 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +28,17 @@ public class FnLocalTest {
             assertEquals(
                 "a:b:c",
                 fn.join(":", List.of("a", "b", "c"))
+            );
+        }
+    }
+
+    @Nested
+    class LenArrayTest {
+        @Test
+        void doc_examples_0() {
+            assertEquals(
+                3,
+                fn.len(new String[]{"a", "b", "c"})
             );
         }
     }

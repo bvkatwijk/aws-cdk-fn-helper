@@ -118,7 +118,7 @@ public class FnLocal implements IFn {
 
     @Override
     public Number len(Object array) {
-        return null;
+        return ((Object[]) array).length;
     }
 
     @Override
