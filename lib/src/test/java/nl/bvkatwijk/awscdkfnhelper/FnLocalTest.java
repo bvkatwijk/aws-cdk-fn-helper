@@ -1,5 +1,6 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FnLocalTest {
     public final FnLocal fn = new FnLocal();
+
+    @Nested
+    class Base64DataTest {
+        @Test
+        void doc_examples_0() {
+            assertEquals(
+                "QVdTIENsb3VkRm9ybWF0aW9u",
+                fn.base64("AWS CloudFormation")
+            );
+        }
+    }
 
     @Nested
     class SplitDelimiterSourceTest {

@@ -2,7 +2,9 @@ package nl.bvkatwijk.awscdkfnhelper;
 
 import lombok.NonNull;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +12,7 @@ public class FnLocal implements IFn {
 
     @Override
     public String base64(String data) {
-        return "";
+        return Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
