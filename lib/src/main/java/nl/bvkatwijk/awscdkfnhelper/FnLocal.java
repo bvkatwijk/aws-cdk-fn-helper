@@ -2,6 +2,7 @@ package nl.bvkatwijk.awscdkfnhelper;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.apache.commons.text.StringSubstitutor;
 import org.jetbrains.annotations.NotNull;
 import software.amazon.awscdk.ICfnRuleConditionExpression;
 import software.amazon.awscdk.IResolveContext;
@@ -50,19 +51,22 @@ public class FnLocal implements IFn {
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionContains(List<String> listOfStrings,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionContains(
+        List<String> listOfStrings,
         String value) {
         return null;
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberEquals(List<String> listOfStrings,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberEquals(
+        List<String> listOfStrings,
         String value) {
         return null;
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberIn(List<String> stringsToCheck,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberIn(
+        List<String> stringsToCheck,
         List<String> stringsToMatch) {
         return null;
     }
@@ -88,7 +92,8 @@ public class FnLocal implements IFn {
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionIf(String conditionId,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionIf(
+        String conditionId,
         Object valueIfTrue,
         Object valueIfFalse) {
         return null;
@@ -237,7 +242,10 @@ public class FnLocal implements IFn {
 
     @Override
     public String sub(String body) {
-        return "";
+        return new StringSubstitutor(Map.of(
+                "AWS::StackName", "my-stack"
+            ))
+            .replace(body);
     }
 
     @Override
