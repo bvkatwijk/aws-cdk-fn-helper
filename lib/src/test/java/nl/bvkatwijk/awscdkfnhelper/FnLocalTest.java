@@ -127,6 +127,36 @@ public class FnLocalTest {
     }
 
     @Nested
+    class ConditionOrConditionsTest {
+        @Test
+        void simple_true() {
+            assertEquals(
+                true,
+                fn.conditionOr(EXPR_TRUE)
+                    .resolve(CTX_EMPTY)
+            );
+        }
+
+        @Test
+        void simple_false() {
+            assertEquals(
+                false,
+                fn.conditionOr(EXRP_FALSE)
+                    .resolve(CTX_EMPTY)
+            );
+        }
+
+        @Test
+        void false_true() {
+            assertEquals(
+                true,
+                fn.conditionOr(EXRP_FALSE, EXPR_TRUE)
+                    .resolve(CTX_EMPTY)
+            );
+        }
+    }
+
+    @Nested
     class JoinDelimiterListOfValuesTest {
         @Test
         void doc_examples_0() {
