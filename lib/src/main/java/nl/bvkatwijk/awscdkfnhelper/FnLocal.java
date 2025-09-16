@@ -8,10 +8,7 @@ import software.amazon.awscdk.IResolveContext;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FnLocal implements IFn {
@@ -33,7 +30,23 @@ public class FnLocal implements IFn {
 
     @Override
     public software.amazon.awscdk.ICfnRuleConditionExpression conditionAnd(software.amazon.awscdk.ICfnConditionExpression... conditions) {
-        return null;
+        return new ICfnRuleConditionExpression() {
+            @Override
+            public @NotNull Boolean getDisambiguator() {
+                return null;
+            }
+
+            @Override
+            public @NotNull List<String> getCreationStack() {
+                return List.of();
+            }
+
+            @Override
+            public @NotNull Object resolve(@NotNull IResolveContext context) {
+                return Arrays.stream(conditions)
+                    .allMatch(it -> (boolean) it.resolve(context));
+            }
+        };
     }
 
     @Override

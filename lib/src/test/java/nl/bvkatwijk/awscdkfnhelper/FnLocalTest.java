@@ -1,7 +1,14 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import software.amazon.awscdk.ICfnConditionExpression;
+import software.amazon.awscdk.IPostProcessor;
+import software.amazon.awscdk.IResolveContext;
+import software.amazon.awscdk.ResolveChangeContextOptions;
+import software.constructs.IConstruct;
 
 import java.util.List;
 
@@ -9,6 +16,61 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FnLocalTest {
+    public static final ICfnConditionExpression EXRP_FALSE = new ICfnConditionExpression() {
+        @Override
+        public @NotNull List<String> getCreationStack() {
+            return List.of();
+        }
+
+        @Override
+        public @NotNull Object resolve(@NotNull IResolveContext context) {
+            return false;
+        }
+    };
+    public static final IResolveContext CTX_EMPTY = new IResolveContext() {
+        @Override
+        public @NotNull List<String> getDocumentPath() {
+            return List.of();
+        }
+
+        @Override
+        public @NotNull Boolean getPreparing() {
+            return null;
+        }
+
+        @Override
+        public @NotNull IConstruct getScope() {
+            return null;
+        }
+
+        @Override
+        public void registerPostProcessor(@NotNull IPostProcessor postProcessor) {
+
+        }
+
+        @Override
+        public @NotNull Object resolve(
+            @NotNull Object x,
+            @Nullable ResolveChangeContextOptions options) {
+            return null;
+        }
+
+        @Override
+        public @NotNull Object resolve(@NotNull Object x) {
+            return null;
+        }
+    };
+    private static final ICfnConditionExpression EXPR_TRUE = new ICfnConditionExpression() {
+        @Override
+        public @NotNull List<String> getCreationStack() {
+            return List.of();
+        }
+
+        @Override
+        public @NotNull Object resolve(@NotNull IResolveContext context) {
+            return true;
+        }
+    };
     public final FnLocal fn = new FnLocal();
 
     @Nested
@@ -18,6 +80,36 @@ public class FnLocalTest {
             assertEquals(
                 "QVdTIENsb3VkRm9ybWF0aW9u",
                 fn.base64("AWS CloudFormation")
+            );
+        }
+    }
+
+    @Nested
+    class ConditionAndConditionsTest {
+        @Test
+        void single_false() {
+            assertEquals(
+                false,
+                fn.conditionAnd(EXRP_FALSE)
+                    .resolve(CTX_EMPTY)
+            );
+        }
+
+        @Test
+        void single_true() {
+            assertEquals(
+                true,
+                fn.conditionAnd(EXPR_TRUE)
+                    .resolve(CTX_EMPTY)
+            );
+        }
+
+        @Test
+        void false_true() {
+            assertEquals(
+                false,
+                fn.conditionAnd(EXRP_FALSE, EXPR_TRUE)
+                    .resolve(CTX_EMPTY)
             );
         }
     }
