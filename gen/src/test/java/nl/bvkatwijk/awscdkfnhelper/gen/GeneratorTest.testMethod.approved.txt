@@ -1,0 +1,7 @@
+@Test
+void doc_examples_0() {
+	assertEquals(
+		List.of("tg", "abc-123", "def-456"),
+		fn.methodName(param)
+	);
+}

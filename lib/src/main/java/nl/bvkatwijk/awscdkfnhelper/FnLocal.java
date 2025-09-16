@@ -1,14 +1,22 @@
 package nl.bvkatwijk.awscdkfnhelper;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import org.apache.commons.text.StringSubstitutor;
+import org.jetbrains.annotations.NotNull;
+import software.amazon.awscdk.ICfnRuleConditionExpression;
+import software.amazon.awscdk.IResolveContext;
+
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FnLocal implements IFn {
 
     @Override
     public String base64(String data) {
-        return "";
+        return Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
@@ -23,34 +31,69 @@ public class FnLocal implements IFn {
 
     @Override
     public software.amazon.awscdk.ICfnRuleConditionExpression conditionAnd(software.amazon.awscdk.ICfnConditionExpression... conditions) {
-        return null;
+        return new ICfnRuleConditionExpression() {
+            @Override
+            public @NotNull Boolean getDisambiguator() {
+                return null;
+            }
+
+            @Override
+            public @NotNull List<String> getCreationStack() {
+                return List.of();
+            }
+
+            @Override
+            public @NotNull Object resolve(@NotNull IResolveContext context) {
+                return Arrays.stream(conditions)
+                    .allMatch(it -> (boolean) it.resolve(context));
+            }
+        };
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionContains(List<String> listOfStrings,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionContains(
+        List<String> listOfStrings,
         String value) {
         return null;
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberEquals(List<String> listOfStrings,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberEquals(
+        List<String> listOfStrings,
         String value) {
         return null;
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberIn(List<String> stringsToCheck,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionEachMemberIn(
+        List<String> stringsToCheck,
         List<String> stringsToMatch) {
         return null;
     }
 
     @Override
     public software.amazon.awscdk.ICfnRuleConditionExpression conditionEquals(Object lhs, Object rhs) {
-        return null;
+        return new ICfnRuleConditionExpression() {
+            @Override
+            public @NotNull Boolean getDisambiguator() {
+                return null;
+            }
+
+            @Override
+            public @NotNull List<String> getCreationStack() {
+                return List.of();
+            }
+
+            @Override
+            public @NotNull Object resolve(@NotNull IResolveContext context) {
+                return lhs.equals(rhs);
+            }
+        };
     }
 
     @Override
-    public software.amazon.awscdk.ICfnRuleConditionExpression conditionIf(String conditionId,
+    public software.amazon.awscdk.ICfnRuleConditionExpression conditionIf(
+        String conditionId,
         Object valueIfTrue,
         Object valueIfFalse) {
         return null;
@@ -58,12 +101,43 @@ public class FnLocal implements IFn {
 
     @Override
     public software.amazon.awscdk.ICfnRuleConditionExpression conditionNot(software.amazon.awscdk.ICfnConditionExpression condition) {
-        return null;
+        return new ICfnRuleConditionExpression() {
+            @Override
+            public @NotNull Boolean getDisambiguator() {
+                return null;
+            }
+
+            @Override
+            public @NotNull List<String> getCreationStack() {
+                return List.of();
+            }
+
+            @Override
+            public @NotNull Object resolve(@NotNull IResolveContext context) {
+                return !((boolean) condition.resolve(context));
+            }
+        };
     }
 
     @Override
     public software.amazon.awscdk.ICfnRuleConditionExpression conditionOr(software.amazon.awscdk.ICfnConditionExpression... conditions) {
-        return null;
+        return new ICfnRuleConditionExpression() {
+            @Override
+            public @NotNull Boolean getDisambiguator() {
+                return null;
+            }
+
+            @Override
+            public @NotNull List<String> getCreationStack() {
+                return List.of();
+            }
+
+            @Override
+            public @NotNull Object resolve(@NotNull IResolveContext context) {
+                return Arrays.stream(conditions)
+                    .anyMatch(it -> (boolean) it.resolve(context));
+            }
+        };
     }
 
     @Override
@@ -108,17 +182,24 @@ public class FnLocal implements IFn {
 
     @Override
     public String join(String delimiter, List<String> listOfValues) {
-        return "";
+        return String.join(delimiter, listOfValues);
     }
 
     @Override
     public Number len(Object array) {
-        return null;
+        return ((Object[]) array).length;
     }
 
+    @SneakyThrows
     @Override
     public String parseDomainName(String url) {
-        return "";
+        if (!url.matches("^[a-zA-Z][a-zA-Z0-9+.-]*://.*")) {
+            url = "http://" + url;
+        }
+        var domain = new URI(url).getHost();
+        return domain.startsWith("www.")
+            ? domain.substring(4)
+            : domain;
     }
 
     @Override
@@ -133,7 +214,7 @@ public class FnLocal implements IFn {
 
     @Override
     public String select(Number index, List<String> array) {
-        return "";
+        return array.get(index.intValue());
     }
 
     @Override
@@ -142,18 +223,30 @@ public class FnLocal implements IFn {
     }
 
     @Override
-    public List<String> split(String delimiter, String source) {
-        return Arrays.asList(source.split(delimiter));
+    public List<String> split(@NonNull String delimiter, @NonNull String source) {
+        List<String> parts = new ArrayList<>();
+        var start = 0;
+        int index;
+        while ((index = source.indexOf(delimiter, start)) != -1) {
+            parts.add(source.substring(start, index));
+            start = index + delimiter.length();
+        }
+        parts.add(source.substring(start));
+        return parts;
     }
 
     @Override
     public String sub(String body, Map<String, String> variables) {
-        return "";
+        return new StringSubstitutor(variables)
+            .replace(body);
     }
 
     @Override
     public String sub(String body) {
-        return "";
+        return new StringSubstitutor(Map.of(
+                "AWS::StackName", "my-stack"
+            ))
+            .replace(body);
     }
 
     @Override

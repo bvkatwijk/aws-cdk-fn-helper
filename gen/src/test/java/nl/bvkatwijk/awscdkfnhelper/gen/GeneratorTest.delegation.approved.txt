@@ -1,0 +1,3 @@
+public String methodName(String param) {
+	return software.amazon.awscdk.Fn.methodName(param);
+}

@@ -6,11 +6,13 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public record Generator() {
     private static final String IND = "\t";
+    public static final String BR = "\n";
 
     public static void main(String[] args) {
         new Generator().run();
@@ -20,44 +22,74 @@ public record Generator() {
     private void run() {
         var path = Path.of(this.getClass().getResource("Fn.java").toURI());
         var file = Files.readString(path);
-        var methods = extractMethods(file);
+        var sourceClass = new SourceClass(file);
+        var methods = sourceClass.methods();
 
-        writeInterface(methods);
-        writeDelegator(methods);
+        writeTo(
+            "./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/IFn.java",
+            interfaceCode(methods));
+        writeTo(
+            "./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/FnDelegate.java",
+            delegatorCode(methods));
+        writeTo(
+            "./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalTestExample.java",
+            localTestCode(methods));
     }
 
-    @SneakyThrows
-    private void writeDelegator(List<Method> methods) {
-        var writer = new FileWriter("./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/FnDelegate.java");
-        writer.write(List.of(
+    private static void writeTo(String path, String body) throws IOException {
+        var writer = new FileWriter(path);
+        writer.write(body);
+        writer.close();
+    }
+
+    private static String localTestCode(List<Method> methods) {
+        return List.of(
+            "package nl.bvkatwijk.awscdkfnhelper;",
+            "",
+            "import org.junit.jupiter.api.Nested;",
+            "import org.junit.jupiter.api.Test;",
+            "",
+            "import java.util.List;",
+            "",
+            "import static org.junit.jupiter.api.Assertions.assertEquals;",
+            "",
+            "public class FnLocalTestExample {",
+            indent("public final FnLocal fn = new FnLocal();"),
+            "",
+            allTests(methods),
+            "}"
+        ).mkString("", BR, BR);
+    }
+
+    private static String allTests(List<Method> methods) {
+        return methods
+            .flatMap(Method::test)
+            .map(Generator::indent)
+            .mkString(BR);
+    }
+
+    private static String delegatorCode(List<Method> methods) {
+        return List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public class FnDelegate {",
-            methods.flatMap(Method::delegation).map(Generator::indent).mkString("\n"),
+            methods.flatMap(Method::delegation)
+                .map(Generator::indent)
+                .mkString(BR),
             "}"
-        ).mkString("", "\n", "\n"));
-        writer.close();
+        ).mkString("", BR, BR);
     }
 
-    @SneakyThrows
-    private void writeInterface(List<Method> methods) {
-        var writer = new FileWriter("./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/IFn.java");
-        writer.write(List.of(
+    private static String interfaceCode(List<Method> methods) {
+        return List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public interface IFn {",
-                methods.flatMap(Method::interfaceDeclaration).map(Generator::indent).mkString("\n"),
+            methods.flatMap(Method::interfaceDeclaration)
+                .map(Generator::indent)
+                .mkString(BR),
             "}"
-        ).mkString("", "\n", "\n"));
-        writer.close();
-    }
-
-    private List<Method> extractMethods(String file) {
-        return List.of(file.split("(\\r?\\n){2,}"))
-            .filter(it -> it.contains("public static "))
-            .map(it -> new MethodSource(List.of(it.split("(\\r?\\n)")).map(String::trim)))
-            .map(MethodSource::toMethod)
-            .toList();
+        ).mkString("", BR, BR);
     }
 
     public record MethodSource(List<String> source) {
@@ -73,6 +105,14 @@ public record Generator() {
         public record Parameter(String type, String name) {
             public String declaration() {
                 return type + " " + name;
+            }
+
+            public String testInputValue() {
+                return switch (StringUtils.substringAfterLast(type, " ")) {
+                    case "java.lang.String" -> "\"" + name + "\"";
+                    case "java.lang.Object" -> "new SomeObject()";
+                    default -> name;
+                };
             }
         }
 
@@ -128,7 +168,7 @@ public record Generator() {
 
         public List<String> interfaceDeclaration() {
             return meta
-                .append(returnType + " " + name + "(" + paramDeclarations(parameters) + ");\n");
+                .append(returnType + " " + name + "(" + paramDeclarations(parameters) + ");" + BR);
         }
 
         private String paramDeclarations(List<MethodSource.Parameter> parameters) {
@@ -150,9 +190,66 @@ public record Generator() {
                 .map(MethodSource.Parameter::name)
                 .mkString(", ");
         }
+
+        public List<String> test() {
+            return List.of("@Nested")
+                .append("class " + testClassName() + " {")
+                .appendAll(testMethod().map(Generator::indent))
+                .append("}" + BR);
+        }
+
+        public List<String> testMethod() {
+            return List.of("@Test")
+                .append("void doc_examples_0() {")
+                .appendAll(testBody().map(Generator::indent))
+                .append("}");
+        }
+
+        private List<String> testBody() {
+            return List.of("assertEquals(")
+                .appendAll(indent(List.of(
+                    """
+                        List.of("tg", "abc-123", "def-456"),""",
+                    "fn." + name + "(" + parameters.map(MethodSource.Parameter::testInputValue).mkString(", ") + ")"
+                )))
+                .append(");");
+        }
+
+        private String testClassName() {
+            return capitalize(name) +
+                parameters.map(MethodSource.Parameter::name)
+                    .map(Generator::capitalize)
+                    .mkString()
+                + "Test";
+        }
     }
 
     public static String indent(String s) {
         return IND + s;
+    }
+
+    public static List<String> indent(List<String> source) {
+        return source.map(Generator::indent);
+    }
+
+    public static String capitalize(String s) {
+        return StringUtils.capitalize(s);
+    }
+
+    /**
+     * Raw class source code
+     */
+    public record SourceClass(String code) {
+        private List<Method> methods() {
+            return methodSources()
+                .map(MethodSource::toMethod);
+        }
+
+        private List<MethodSource> methodSources() {
+            return List.of(code.split("(\\r?\\n){2,}"))
+                .filter(it -> it.contains("public static "))
+                .map(it -> new MethodSource(List.of(it.split("(\\r?\\n)"))
+                    .map(String::trim)));
+        }
     }
 }
