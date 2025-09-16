@@ -240,4 +240,15 @@ public class FnLocalTest {
             );
         }
     }
+
+    @Nested
+    class SubBodyTest {
+        @Test
+        void doc_examples_0() {
+            assertEquals(
+                "SSH security group for my-stack",
+                fn.sub("SSH security group for ${AWS::StackName}")
+            );
+        }
+    }
 }
