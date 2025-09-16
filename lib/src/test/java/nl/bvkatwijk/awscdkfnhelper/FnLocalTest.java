@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FnLocalTest {
-    public static final ICfnConditionExpression EXRP_FALSE = new ICfnConditionExpression() {
+    public static final ICfnConditionExpression EXPR_FALSE = new ICfnConditionExpression() {
         @Override
         public @NotNull List<String> getCreationStack() {
             return List.of();
@@ -90,7 +90,7 @@ public class FnLocalTest {
         void single_false() {
             assertEquals(
                 false,
-                fn.conditionAnd(EXRP_FALSE)
+                fn.conditionAnd(EXPR_FALSE)
                     .resolve(CTX_EMPTY)
             );
         }
@@ -108,7 +108,7 @@ public class FnLocalTest {
         void false_true() {
             assertEquals(
                 false,
-                fn.conditionAnd(EXRP_FALSE, EXPR_TRUE)
+                fn.conditionAnd(EXPR_FALSE, EXPR_TRUE)
                     .resolve(CTX_EMPTY)
             );
         }
@@ -122,6 +122,27 @@ public class FnLocalTest {
                 false,
                 //TODO use example from docs after implementing ref
                 fn.conditionEquals(new Object(), new Object()).resolve(null)
+            );
+        }
+    }
+
+    @Nested
+    class ConditionNotConditionTest {
+        @Test
+        void simple_true() {
+            assertEquals(
+                false,
+                fn.conditionNot(EXPR_TRUE)
+                    .resolve(CTX_EMPTY)
+            );
+        }
+
+        @Test
+        void simple_false() {
+            assertEquals(
+                true,
+                fn.conditionNot(EXPR_FALSE)
+                    .resolve(CTX_EMPTY)
             );
         }
     }
@@ -141,7 +162,7 @@ public class FnLocalTest {
         void simple_false() {
             assertEquals(
                 false,
-                fn.conditionOr(EXRP_FALSE)
+                fn.conditionOr(EXPR_FALSE)
                     .resolve(CTX_EMPTY)
             );
         }
@@ -150,7 +171,7 @@ public class FnLocalTest {
         void false_true() {
             assertEquals(
                 true,
-                fn.conditionOr(EXRP_FALSE, EXPR_TRUE)
+                fn.conditionOr(EXPR_FALSE, EXPR_TRUE)
                     .resolve(CTX_EMPTY)
             );
         }
