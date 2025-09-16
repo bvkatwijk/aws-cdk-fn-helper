@@ -237,7 +237,8 @@ public class FnLocal implements IFn {
 
     @Override
     public String sub(String body, Map<String, String> variables) {
-        return "";
+        return new StringSubstitutor(variables)
+            .replace(body);
     }
 
     @Override
