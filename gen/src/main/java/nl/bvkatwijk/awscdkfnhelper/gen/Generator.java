@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -20,17 +21,28 @@ public record Generator() {
     private void run() {
         var path = Path.of(this.getClass().getResource("Fn.java").toURI());
         var file = Files.readString(path);
-        var methods = extractMethods(file);
+        var sourceClass = new SourceClass(file);
+        var methods = sourceClass.methods();
 
-        writeInterface(methods);
-        writeDelegator(methods);
-        writeLocalTest(methods);
+        writeTo(
+            "./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/IFn.java",
+            interfaceCode(methods));
+        writeTo(
+            "./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/FnDelegate.java",
+            delegatorCode(methods));
+        writeTo(
+            "./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalTestExample.java",
+            localTestCode(methods));
     }
 
-    @SneakyThrows
-    private void writeLocalTest(List<Method> methods) {
-        var writer = new FileWriter("./lib/src/test/java/nl/bvkatwijk/awscdkfnhelper/FnLocalTestExample.java");
-        writer.write(List.of(
+    private static void writeTo(String path, String body) throws IOException {
+        var writer = new FileWriter(path);
+        writer.write(body);
+        writer.close();
+    }
+
+    private static String localTestCode(List<Method> methods) {
+        return List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "import org.junit.jupiter.api.Nested;",
@@ -45,8 +57,7 @@ public record Generator() {
             "",
             allTests(methods),
             "}"
-        ).mkString("", "\n", "\n"));
-        writer.close();
+        ).mkString("", "\n", "\n");
     }
 
     private static String allTests(List<Method> methods) {
@@ -56,38 +67,24 @@ public record Generator() {
             .mkString("\n");
     }
 
-    @SneakyThrows
-    private void writeDelegator(List<Method> methods) {
-        var writer = new FileWriter("./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/FnDelegate.java");
-        writer.write(List.of(
+    private static String delegatorCode(List<Method> methods) {
+        return List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public class FnDelegate {",
             methods.flatMap(Method::delegation).map(Generator::indent).mkString("\n"),
             "}"
-        ).mkString("", "\n", "\n"));
-        writer.close();
+        ).mkString("", "\n", "\n");
     }
 
-    @SneakyThrows
-    private void writeInterface(List<Method> methods) {
-        var writer = new FileWriter("./lib/src/main/java/nl/bvkatwijk/awscdkfnhelper/IFn.java");
-        writer.write(List.of(
+    private static String interfaceCode(List<Method> methods) {
+        return List.of(
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public interface IFn {",
             methods.flatMap(Method::interfaceDeclaration).map(Generator::indent).mkString("\n"),
             "}"
-        ).mkString("", "\n", "\n"));
-        writer.close();
-    }
-
-    private List<Method> extractMethods(String file) {
-        return List.of(file.split("(\\r?\\n){2,}"))
-            .filter(it -> it.contains("public static "))
-            .map(it -> new MethodSource(List.of(it.split("(\\r?\\n)")).map(String::trim)))
-            .map(MethodSource::toMethod)
-            .toList();
+        ).mkString("", "\n", "\n");
     }
 
     public record MethodSource(List<String> source) {
@@ -227,5 +224,21 @@ public record Generator() {
 
     public static String capitalize(String s) {
         return StringUtils.capitalize(s);
+    }
+
+    /**
+     * Raw class source code
+     */
+    public record SourceClass(String code) {
+        private List<Method> methods() {
+            return methodSources()
+                .map(MethodSource::toMethod);
+        }
+
+        private List<MethodSource> methodSources() {
+            return List.of(code.split("(\\r?\\n){2,}"))
+                .filter(it -> it.contains("public static "))
+                .map(it -> new MethodSource(List.of(it.split("(\\r?\\n)")).map(String::trim)));
+        }
     }
 }
