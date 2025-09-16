@@ -12,6 +12,7 @@ import java.nio.file.Path;
 
 public record Generator() {
     private static final String IND = "\t";
+    public static final String BR = "\n";
 
     public static void main(String[] args) {
         new Generator().run();
@@ -57,14 +58,14 @@ public record Generator() {
             "",
             allTests(methods),
             "}"
-        ).mkString("", "\n", "\n");
+        ).mkString("", BR, BR);
     }
 
     private static String allTests(List<Method> methods) {
         return methods
             .flatMap(Method::test)
             .map(Generator::indent)
-            .mkString("\n");
+            .mkString(BR);
     }
 
     private static String delegatorCode(List<Method> methods) {
@@ -72,9 +73,11 @@ public record Generator() {
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public class FnDelegate {",
-            methods.flatMap(Method::delegation).map(Generator::indent).mkString("\n"),
+            methods.flatMap(Method::delegation)
+                .map(Generator::indent)
+                .mkString(BR),
             "}"
-        ).mkString("", "\n", "\n");
+        ).mkString("", BR, BR);
     }
 
     private static String interfaceCode(List<Method> methods) {
@@ -82,9 +85,11 @@ public record Generator() {
             "package nl.bvkatwijk.awscdkfnhelper;",
             "",
             "public interface IFn {",
-            methods.flatMap(Method::interfaceDeclaration).map(Generator::indent).mkString("\n"),
+            methods.flatMap(Method::interfaceDeclaration)
+                .map(Generator::indent)
+                .mkString(BR),
             "}"
-        ).mkString("", "\n", "\n");
+        ).mkString("", BR, BR);
     }
 
     public record MethodSource(List<String> source) {
@@ -163,7 +168,7 @@ public record Generator() {
 
         public List<String> interfaceDeclaration() {
             return meta
-                .append(returnType + " " + name + "(" + paramDeclarations(parameters) + ");\n");
+                .append(returnType + " " + name + "(" + paramDeclarations(parameters) + ");" + BR);
         }
 
         private String paramDeclarations(List<MethodSource.Parameter> parameters) {
@@ -189,9 +194,8 @@ public record Generator() {
         public List<String> test() {
             return List.of("@Nested")
                 .append("class " + testClassName() + " {")
-                .appendAll(testMethod()
-                    .map(Generator::indent))
-                .append("}\n");
+                .appendAll(testMethod().map(Generator::indent))
+                .append("}" + BR);
         }
 
         public List<String> testMethod() {
@@ -203,23 +207,29 @@ public record Generator() {
 
         private List<String> testBody() {
             return List.of("assertEquals(")
-                .appendAll(List.of(
+                .appendAll(indent(List.of(
                     """
                         List.of("tg", "abc-123", "def-456"),""",
                     "fn." + name + "(" + parameters.map(MethodSource.Parameter::testInputValue).mkString(", ") + ")"
-                ).map(Generator::indent))
+                )))
                 .append(");");
         }
 
         private String testClassName() {
-            return capitalize(name)
-                + parameters.map(MethodSource.Parameter::name).map(Generator::capitalize).mkString()
+            return capitalize(name) +
+                parameters.map(MethodSource.Parameter::name)
+                    .map(Generator::capitalize)
+                    .mkString()
                 + "Test";
         }
     }
 
     public static String indent(String s) {
         return IND + s;
+    }
+
+    public static List<String> indent(List<String> source) {
+        return source.map(Generator::indent);
     }
 
     public static String capitalize(String s) {
@@ -238,7 +248,8 @@ public record Generator() {
         private List<MethodSource> methodSources() {
             return List.of(code.split("(\\r?\\n){2,}"))
                 .filter(it -> it.contains("public static "))
-                .map(it -> new MethodSource(List.of(it.split("(\\r?\\n)")).map(String::trim)));
+                .map(it -> new MethodSource(List.of(it.split("(\\r?\\n)"))
+                    .map(String::trim)));
         }
     }
 }
