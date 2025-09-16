@@ -11,6 +11,7 @@ import software.amazon.awscdk.ResolveChangeContextOptions;
 import software.constructs.IConstruct;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -237,6 +238,19 @@ public class FnLocalTest {
             assertEquals(
                 List.of("a", "", "c", ""),
                 fn.split("|", "a||c|")
+            );
+        }
+    }
+
+    @Nested
+    class SubBodyVariablesTest {
+        @Test
+        void doc_examples_0() {
+            assertEquals(
+                "www.example.com",
+                fn.sub("www.${Domain}", Map.of(
+                    "Domain", "example.com"
+                ))
             );
         }
     }
