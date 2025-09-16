@@ -1,4 +1,0 @@
-@Test
-void canonical() {
-	FnLocalTest.MethodNameParamTest.canonical();
-}

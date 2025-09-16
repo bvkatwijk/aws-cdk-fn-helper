@@ -23,12 +23,12 @@ class GeneratorTest {
     }
 
     @Test
-    void testMethod() {
+    void testClass() {
         Approvals.verify(METHOD_SIMPLE().test().mkString("\n"));
     }
 
     @Test
-    void testBody() {
+    void testMethod() {
         Approvals.verify(METHOD_SIMPLE().testMethod().mkString("\n"));
     }
 
